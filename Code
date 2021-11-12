@@ -27,6 +27,17 @@ local lo = Instance.new("TextButton")
 local ImageLabel_9 = Instance.new("ImageLabel")
 
 
+function ismouse()
+	local y,re = pcall(function()
+		local m = game.Players.LocalPlayer:GetMouse()
+	end)
+	return y
+end
+
+
+repeat game:GetService'RunService'.RenderStepped:Wait() until ismouse()
+
+
 local m = game.Players.LocalPlayer:GetMouse()
 
 local uis = game:GetService'UserInputService'
