@@ -1,0 +1,416 @@
+
+
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local cut = Instance.new("TextButton")
+local ImageLabel = Instance.new("ImageLabel")
+local copy = Instance.new("TextButton")
+local ImageLabel_2 = Instance.new("ImageLabel")
+local paste = Instance.new("TextButton")
+local ImageLabel_3 = Instance.new("ImageLabel")
+local save = Instance.new("TextButton")
+local ImageLabel_4 = Instance.new("ImageLabel")
+local loa = Instance.new("TextButton")
+local ImageLabel_5 = Instance.new("ImageLabel")
+local chat = Instance.new("TextButton")
+local ImageLabel_6 = Instance.new("ImageLabel")
+local Frame_2 = Instance.new("Frame")
+local join = Instance.new("TextButton")
+local ImageLabel_7 = Instance.new("ImageLabel")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local del = Instance.new("TextButton")
+local TextButton = Instance.new("TextButton")
+local UIListLayout = Instance.new("UIListLayout")
+
+
+local m = game.Players.LocalPlayer:GetMouse()
+
+local uis = game:GetService'UserInputService'
+
+local http = game:GetService'HttpService'
+
+
+function Error(msg)
+	game.StarterGui:SetCore("ChatMakeSystemMessage", 
+		{
+			Text = 'Woah there bud, ' .. msg .. '!',
+			Color = Color3.fromRGB(255, 0, 0),
+			Font = Enum.Font.SourceSansBold,
+			TextSize = 18,
+		})
+end
+
+function isHoveringOverObj(obj)
+	local tx = obj.AbsolutePosition.X
+	local ty = obj.AbsolutePosition.Y
+	local bx = tx + obj.AbsoluteSize.X
+	local by = ty + obj.AbsoluteSize.Y
+	if m.X >= tx and m.Y >= ty and m.X <= bx and m.Y <= by then
+		return true
+	end
+end
+
+function JoinServer(Code)
+	return syn.request({
+		Url = 'http://127.0.0.1:6463/rpc?v=1',
+		Method = 'POST',
+		Body = HttpService:JSONEncode({
+			cmd = 'INVITE_BROWSER',
+			args = {
+				code = Code
+			},
+
+			nonce = lower(HttpService:GenerateGUID(false))
+		}),
+		Headers = {
+			['Content-Type'] = 'application/json',
+			['Origin'] = 'https://discord.com'
+		}
+	})
+end
+
+function Chat(message)
+
+
+	local function thing(s)
+		for _, v in pairs(s:GetChildren()) do
+			if v:IsA("ScreenGui") and v:FindFirstChild("Frame") and v:FindFirstChild("Frame"):FindFirstChild("ChatBarParentFrame") then
+				return v
+			end
+		end
+	end
+
+	local player = game.Players.LocalPlayer
+	local c = thing(player.PlayerGui)
+	local bar = c.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
+	local text = bar.Text
+	bar:CaptureFocus()
+	bar.Text = message
+	bar:ReleaseFocus(true)
+	bar:CaptureFocus()
+	bar.Text = text
+	bar:ReleaseFocus()
+end
+
+local clip = nil
+
+local selectedText = nil
+
+local textBox = nil
+
+local txt = nil
+
+local t = false
+
+
+local file = nil
+
+local y,re = pcall(function()
+	file = readfile('ContextMenuSaves.txt')
+end)
+
+if not y then
+	writefile('ContextMenuSaves.txt','[]')
+	file = http:JSONDecode(readfile('ContextMenuSaves.txt'))
+else
+	file = http:JSONDecode(file)
+end
+
+
+function Delete(v)
+	table.remove(file,table.find(file,v))
+	writefile('ContextMenuSaves.txt',http:JSONEncode(file))
+	Load()
+end
+
+local function FixText(v)
+	return string.len(v) >= 18 and string.format('            %s...',string.sub(v,1,-(string.len(v)-18))) or string.format('            %s',string.sub(v,1,-(string.len(v)-18)))
+end
+
+function Load()
+	for _, v in pairs(ScrollingFrame:GetChildren()) do
+		if v.Name == 'nah' then
+			v:Destroy()
+		end
+	end
+	for _, v in pairs(file) do
+		local sav = del:Clone()
+		sav.Name = 'nah'
+		sav.Parent = ScrollingFrame
+		sav.Visible = true
+		sav.Text = FixText(v)
+		sav.MouseButton1Click:Connect(function()
+			textBox.Text = selectedText[1] .. v .. selectedText[3]
+		end)
+		sav.TextButton.MouseButton1Click:Connect(function()
+			Delete(v)
+		end)
+	end
+end
+
+uis.InputBegan:Connect(function(inpu)
+	local focus = uis:GetFocusedTextBox()
+	if inpu.UserInputType == Enum.UserInputType.MouseButton2 and focus then
+		Load()
+		textBox = focus
+		selectedText = {
+			[1] = string.sub(
+				textBox.Text,
+				0,
+				math.min(textBox.CursorPosition, textBox.SelectionStart) - 1
+			),
+			[2] = string.sub(
+				textBox.Text,
+				math.min(textBox.CursorPosition, textBox.SelectionStart),
+				math.max(textBox.CursorPosition, textBox.SelectionStart) - 1
+			),
+			[3] = string.sub(
+				textBox.Text,
+				math.max(textBox.CursorPosition, textBox.SelectionStart),
+				string.len(textBox.Text) + 1
+			)
+		}
+		local pos = uis:GetMouseLocation()
+		txt = selectedText
+		Frame.Position = UDim2.new(0, pos.X, 0, pos.Y)
+		ScreenGui.Enabled = true
+		t = true
+		while t do game:GetService('RunService').RenderStepped:Wait() end
+		selectedText = nil
+		txt = nil
+		ScreenGui.Enabled = false
+		ScrollingFrame.Visible = false
+	end
+	if inpu.UserInputType == Enum.UserInputType.MouseButton1 then
+		if not isHoveringOverObj(ScrollingFrame) and not isHoveringOverObj(Frame) then
+			t = false
+		end
+	end
+end)
+
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.Enabled = false
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.Position = UDim2.new(0.430555552, 0, 0.286184222, 0)
+Frame.Size = UDim2.new(0, 151, 0, 277)
+
+cut.Name = "cut"
+cut.Parent = Frame
+cut.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+cut.BorderSizePixel = 0
+cut.Size = UDim2.new(0, 151, 0, 23)
+cut.Font = Enum.Font.SourceSans
+cut.Text = "            Cut"
+cut.TextColor3 = Color3.fromRGB(0, 0, 0)
+cut.TextSize = 14.000
+cut.TextXAlignment = Enum.TextXAlignment.Left
+cut.MouseButton1Click:Connect(function()
+	if (#selectedText[2] > 1) then
+		textBox.Text = selectedText[1] .. selectedText[3]
+	end
+end)
+
+ImageLabel.Parent = cut
+ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel.BackgroundTransparency = 1.000
+ImageLabel.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel.Image = "rbxassetid://257125656"
+
+copy.Name = "copy"
+copy.Parent = Frame
+copy.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+copy.BorderSizePixel = 0
+copy.Position = UDim2.new(0, 0, 0.0830324888, 0)
+copy.Size = UDim2.new(0, 151, 0, 23)
+copy.Font = Enum.Font.SourceSans
+copy.Text = "            Copy"
+copy.TextColor3 = Color3.fromRGB(0, 0, 0)
+copy.TextSize = 14.000
+copy.TextXAlignment = Enum.TextXAlignment.Left
+copy.MouseButton1Click:Connect(function()
+	if (#selectedText[2] > 1) then
+		clip = selectedText[2]
+		setclipboard(clip)
+	end
+end)
+
+ImageLabel_2.Parent = copy
+ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_2.BackgroundTransparency = 1.000
+ImageLabel_2.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_2.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_2.Image = "rbxassetid://247421300"
+
+paste.Name = "paste"
+paste.Parent = Frame
+paste.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+paste.BorderSizePixel = 0
+paste.Position = UDim2.new(0, 0, 0.166064993, 0)
+paste.Size = UDim2.new(0, 151, 0, 23)
+paste.Font = Enum.Font.SourceSans
+paste.Text = "            Paste"
+paste.TextColor3 = Color3.fromRGB(0, 0, 0)
+paste.TextSize = 14.000
+paste.TextXAlignment = Enum.TextXAlignment.Left
+paste.MouseButton1Click:Connect(function()
+	textBox.Text = selectedText[1] .. clip .. selectedText[3]
+end)
+
+ImageLabel_3.Parent = paste
+ImageLabel_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_3.BackgroundTransparency = 1.000
+ImageLabel_3.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_3.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_3.Image = "rbxassetid://733405685"
+ImageLabel_3.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
+save.Name = "save"
+save.Parent = Frame
+save.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+save.BorderSizePixel = 0
+save.Position = UDim2.new(0, 0, 0.249097481, 0)
+save.Size = UDim2.new(0, 151, 0, 23)
+save.Font = Enum.Font.SourceSans
+save.Text = "            Save"
+save.TextColor3 = Color3.fromRGB(0, 0, 0)
+save.TextSize = 14.000
+save.TextXAlignment = Enum.TextXAlignment.Left
+save.MouseButton1Click:Connect(function()
+	if #selectedText[2] > 1 and #selectedText[2] < 1000 then
+		if not table.find(file,selectedText[2]) then
+			table.insert(file,selectedText[2])
+			writefile('ContextMenuSaves.txt',http:JSONEncode(file))
+			Load()
+		else
+			Error('you already have that one saved')
+		end
+	else
+		Error('the limit for saving text is 1-1000')
+	end
+end)
+
+ImageLabel_4.Parent = save
+ImageLabel_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_4.BackgroundTransparency = 1.000
+ImageLabel_4.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_4.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_4.Image = "rbxassetid://6087549875"
+ImageLabel_4.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
+loa.Name = "load"
+loa.Parent = Frame
+loa.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+loa.BorderSizePixel = 0
+loa.Position = UDim2.new(0, 0, 0.332129955, 0)
+loa.Size = UDim2.new(0, 151, 0, 23)
+loa.Font = Enum.Font.SourceSans
+loa.Text = "            Load"
+loa.TextColor3 = Color3.fromRGB(0, 0, 0)
+loa.TextSize = 14.000
+loa.TextXAlignment = Enum.TextXAlignment.Left
+loa.MouseButton1Click:Connect(function()
+	ScrollingFrame.Visible = not ScrollingFrame.Visible
+end)
+
+ImageLabel_5.Parent = loa
+ImageLabel_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_5.BackgroundTransparency = 1.000
+ImageLabel_5.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_5.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_5.Image = "rbxassetid://247421770"
+ImageLabel_5.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
+chat.Name = "chat"
+chat.Parent = Frame
+chat.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+chat.BorderSizePixel = 0
+chat.Position = UDim2.new(0, 0, 0.425992787, 0)
+chat.Size = UDim2.new(0, 151, 0, 23)
+chat.Font = Enum.Font.SourceSans
+chat.Text = "            Chat"
+chat.TextColor3 = Color3.fromRGB(0, 0, 0)
+chat.TextSize = 14.000
+chat.TextXAlignment = Enum.TextXAlignment.Left
+chat.MouseButton1Click:Connect(function()
+	Chat(selectedText[2])
+end)
+
+ImageLabel_6.Parent = chat
+ImageLabel_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_6.BackgroundTransparency = 1.000
+ImageLabel_6.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_6.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_6.Image = "rbxassetid://5654616430"
+ImageLabel_6.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
+Frame_2.Parent = Frame
+Frame_2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame_2.BorderSizePixel = 0
+Frame_2.Position = UDim2.new(0, 0, 0.415162444, 0)
+Frame_2.Size = UDim2.new(0, 151, 0, 2)
+
+join.Name = "join"
+join.Parent = Frame
+join.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+join.BorderSizePixel = 0
+join.Position = UDim2.new(0, 0, 0.509025276, 0)
+join.Size = UDim2.new(0, 151, 0, 23)
+join.Font = Enum.Font.SourceSans
+join.Text = "            Join Discord server"
+join.TextColor3 = Color3.fromRGB(0, 0, 0)
+join.TextSize = 14.000
+join.TextXAlignment = Enum.TextXAlignment.Left
+join.MouseButton1Click:Connect(function()
+	JoinServer(selectedText[2])
+end)
+
+ImageLabel_7.Parent = join
+ImageLabel_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_7.BackgroundTransparency = 1.000
+ImageLabel_7.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_7.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_7.Image = "rbxassetid://1030533835"
+ImageLabel_7.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
+ScrollingFrame.Parent = Frame
+ScrollingFrame.Active = true
+ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollingFrame.Position = UDim2.new(1.00999999, 0, 0.335999995, 0)
+ScrollingFrame.Size = UDim2.new(0, 172, 0, 276)
+ScrollingFrame.Visible = false
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 5.05000019, 0)
+
+del.Name = "del"
+del.Parent = ScrollingFrame
+del.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+del.BorderSizePixel = 0
+del.Size = UDim2.new(0, 124, 0, 23)
+del.Visible = false
+del.Font = Enum.Font.SourceSans
+del.Text = "            Hello, World!"
+del.TextColor3 = Color3.fromRGB(0, 0, 0)
+del.TextSize = 14.000
+del.TextXAlignment = Enum.TextXAlignment.Left
+
+TextButton.Parent = del
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(1.02481997, 0, 3.7252903e-09, 0)
+TextButton.Size = UDim2.new(0, 23, 0, 23)
+TextButton.ZIndex = 99
+TextButton.Font = Enum.Font.Nunito
+TextButton.Text = "X"
+TextButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+TextButton.TextScaled = true
+TextButton.TextSize = 14.000
+TextButton.TextWrapped = true
+
+UIListLayout.Parent = ScrollingFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
