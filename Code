@@ -128,7 +128,7 @@ function Delete(v)
 end
 
 local function FixText(v)
-	return string.len(v) >= 18 and '            ' .. string.sub(v,1,-(string.len(v)-18)) .. '...' or '            ' .. string.sub(v,1,-(string.len(v)-18))
+	return string.len(v) >= 18 and '            ' .. string.sub(v,1,-(string.len(v)-18)) .. '...' or '            ' .. v
 end
 
 function Load()
