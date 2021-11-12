@@ -21,6 +21,10 @@ local ScrollingFrame = Instance.new("ScrollingFrame")
 local del = Instance.new("TextButton")
 local TextButton = Instance.new("TextButton")
 local UIListLayout = Instance.new("UIListLayout")
+local up = Instance.new("TextButton")
+local ImageLabel_8 = Instance.new("ImageLabel")
+local lo = Instance.new("TextButton")
+local ImageLabel_9 = Instance.new("ImageLabel")
 
 
 local m = game.Players.LocalPlayer:GetMouse()
@@ -124,7 +128,7 @@ function Delete(v)
 end
 
 local function FixText(v)
-	return string.len(v) >= 18 and string.format('            %s...',string.sub(v,1,-(string.len(v)-18))) or string.format('            %s',string.sub(v,1,-(string.len(v)-18)))
+	return string.len(v) >= 18 and '            ' .. string.sub(v,1,-(string.len(v)-18)) .. '...' or '            ' .. string.sub(v,1,-(string.len(v)-18))
 end
 
 function Load()
@@ -211,9 +215,7 @@ cut.TextColor3 = Color3.fromRGB(0, 0, 0)
 cut.TextSize = 14.000
 cut.TextXAlignment = Enum.TextXAlignment.Left
 cut.MouseButton1Click:Connect(function()
-	if (#selectedText[2] > 1) then
-		textBox.Text = selectedText[1] .. selectedText[3]
-	end
+	textBox.Text = selectedText[1] .. selectedText[3]
 end)
 
 ImageLabel.Parent = cut
@@ -331,7 +333,7 @@ chat.Name = "chat"
 chat.Parent = Frame
 chat.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 chat.BorderSizePixel = 0
-chat.Position = UDim2.new(0, 0, 0.425992787, 0)
+chat.Position = UDim2.new(0, 0, 0.646389842, 0)
 chat.Size = UDim2.new(0, 151, 0, 23)
 chat.Font = Enum.Font.SourceSans
 chat.Text = "            Chat"
@@ -350,17 +352,64 @@ ImageLabel_6.Size = UDim2.new(0, 20, 0, 20)
 ImageLabel_6.Image = "rbxassetid://5654616430"
 ImageLabel_6.ImageColor3 = Color3.fromRGB(0, 0, 0)
 
+up.Name = "up"
+up.Parent = Frame
+up.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+up.BorderSizePixel = 0
+up.Position = UDim2.new(0, 0, 0.407942235, 0)
+up.Size = UDim2.new(0, 151, 0, 23)
+up.Font = Enum.Font.SourceSans
+up.Text = "            Uppercase"
+up.TextColor3 = Color3.fromRGB(0, 0, 0)
+up.TextSize = 14.000
+up.TextXAlignment = Enum.TextXAlignment.Left
+up.MouseButton1Click:Connect(function()
+	textBox.Text = selectedText[1] .. string.upper(selectedText[2]) .. selectedText[3]
+end)
+
+ImageLabel_8.Parent = up
+ImageLabel_8.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_8.BackgroundTransparency = 1.000
+ImageLabel_8.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_8.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_8.Image = "rbxassetid://5853926901"
+ImageLabel_8.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
+lo.Name = "lo"
+lo.Parent = Frame
+lo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+lo.BorderSizePixel = 0
+lo.Position = UDim2.new(0, 0, 0.483754516, 0)
+lo.Size = UDim2.new(0, 151, 0, 23)
+lo.Font = Enum.Font.SourceSans
+lo.Text = "            Lowercase"
+lo.TextColor3 = Color3.fromRGB(0, 0, 0)
+lo.TextSize = 14.000
+lo.TextXAlignment = Enum.TextXAlignment.Left
+lo.MouseButton1Click:Connect(function()
+	textBox.Text = selectedText[1] .. string.lower(selectedText[2]) .. selectedText[3]
+end)
+
+ImageLabel_9.Parent = lo
+ImageLabel_9.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_9.BackgroundTransparency = 1.000
+ImageLabel_9.Position = UDim2.new(0, 0, 0.0460000001, 0)
+ImageLabel_9.Rotation = 180.000
+ImageLabel_9.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_9.Image = "rbxassetid://5853926901"
+ImageLabel_9.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
 Frame_2.Parent = Frame
 Frame_2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Frame_2.BorderSizePixel = 0
-Frame_2.Position = UDim2.new(0, 0, 0.415162444, 0)
+Frame_2.Position = UDim2.new(0, 0, 0.602888107, 0)
 Frame_2.Size = UDim2.new(0, 151, 0, 2)
 
 join.Name = "join"
 join.Parent = Frame
 join.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 join.BorderSizePixel = 0
-join.Position = UDim2.new(0, 0, 0.509025276, 0)
+join.Position = UDim2.new(0, 0, 0.729241848, 0)
 join.Size = UDim2.new(0, 151, 0, 23)
 join.Font = Enum.Font.SourceSans
 join.Text = "            Join Discord server"
