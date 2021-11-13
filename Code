@@ -209,13 +209,7 @@ uis.InputBegan:Connect(function(inpu)
 		txt = nil
 		Frame.Visible = false
 		ScrollingFrame.Visible = false
-	end
-	if inpu.UserInputType == Enum.UserInputType.MouseButton1 then
-		if not isHoveringOverObj(ScrollingFrame) and not isHoveringOverObj(Frame) and not isHoveringOverObj(cop) then
-			t = false
-		end
-	end
-	if inpu.UserInputType == Enum.UserInputType.MouseButton2 then
+	else
 		tl = GetLabel(pos)
 		if tl then
 			cop.Position = UDim2.new(0, pos.X, 0, pos.Y)
@@ -224,6 +218,11 @@ uis.InputBegan:Connect(function(inpu)
 			t = true
 			while t do game:GetService('RunService').RenderStepped:Wait() end
 			cop.Visible = false
+		end
+	end
+	if inpu.UserInputType == Enum.UserInputType.MouseButton1 then
+		if not isHoveringOverObj(ScrollingFrame) and not isHoveringOverObj(Frame) and not isHoveringOverObj(cop) then
+			t = false
 		end
 	end
 end)
