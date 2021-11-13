@@ -26,6 +26,9 @@ local ImageLabel_8 = Instance.new("ImageLabel")
 local lo = Instance.new("TextButton")
 local ImageLabel_9 = Instance.new("ImageLabel")
 
+local cop = Instance.new("TextButton")
+local il = Instance.new("ImageLabel")
+
 
 function ismouse()
 	local y,re = pcall(function()
@@ -107,6 +110,8 @@ function Chat(message)
 	bar:ReleaseFocus()
 end
 
+local tl = nil
+
 local clip = nil
 
 local selectedText = nil
@@ -163,7 +168,16 @@ function Load()
 	end
 end
 
+function GetLabel(p)
+	for _, v in pairs(game.Players.LocalPlayer.PlayerGui:GetGuiObjectsAtPosition(p.X,p.Y-36)) do
+		if v:IsA('TextLabel') then
+			return v
+		end
+	end
+end
+
 uis.InputBegan:Connect(function(inpu)
+	local pos = uis:GetMouseLocation()
 	local focus = uis:GetFocusedTextBox()
 	if inpu.UserInputType == Enum.UserInputType.MouseButton2 and focus then
 		Load()
@@ -185,20 +199,31 @@ uis.InputBegan:Connect(function(inpu)
 				string.len(textBox.Text) + 1
 			)
 		}
-		local pos = uis:GetMouseLocation()
 		txt = selectedText
 		Frame.Position = UDim2.new(0, pos.X, 0, pos.Y)
-		ScreenGui.Enabled = true
+		Frame.Visible = true
+		t = false
 		t = true
 		while t do game:GetService('RunService').RenderStepped:Wait() end
 		selectedText = nil
 		txt = nil
-		ScreenGui.Enabled = false
+		Frame.Visible = false
 		ScrollingFrame.Visible = false
 	end
 	if inpu.UserInputType == Enum.UserInputType.MouseButton1 then
-		if not isHoveringOverObj(ScrollingFrame) and not isHoveringOverObj(Frame) then
+		if not isHoveringOverObj(ScrollingFrame) and not isHoveringOverObj(Frame) and not isHoveringOverObj(cop) then
 			t = false
+		end
+	end
+	if inpu.UserInputType == Enum.UserInputType.MouseButton2 then
+		tl = GetLabel(pos)
+		if tl then
+			cop.Position = UDim2.new(0, pos.X, 0, pos.Y)
+			cop.Visible = true
+			t = false
+			t = true
+			while t do game:GetService('RunService').RenderStepped:Wait() end
+			cop.Visible = false
 		end
 	end
 end)
@@ -208,12 +233,38 @@ ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = true
-ScreenGui.Enabled = false
+
+
+cop.Name = "copy"
+cop.Parent = ScreenGui
+cop.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+cop.BorderSizePixel = 0
+cop.Position = UDim2.new(0.440532088, 0, 0.481058806, 0)
+cop.Size = UDim2.new(0, 151, 0, 23)
+cop.Font = Enum.Font.SourceSans
+cop.Text = "            Copy Text"
+cop.TextColor3 = Color3.fromRGB(0, 0, 0)
+cop.TextSize = 14.000
+cop.TextXAlignment = Enum.TextXAlignment.Left
+cop.Visible = false
+cop.MouseButton1Click:Connect(function()
+	setclipboard(tl.Text)
+	t = false
+end)
+
+il.Parent = cop
+il.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+il.BackgroundTransparency = 1.000
+il.Position = UDim2.new(0, 0, 0.0460000001, 0)
+il.Size = UDim2.new(0, 20, 0, 20)
+il.Image = "rbxassetid://247421300"
+
 
 Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Frame.Position = UDim2.new(0.430555552, 0, 0.286184222, 0)
 Frame.Size = UDim2.new(0, 151, 0, 277)
+Frame.Visible = false
 
 cut.Name = "cut"
 cut.Parent = Frame
