@@ -524,3 +524,4 @@ TextButton.TextWrapped = true
 
 UIListLayout.Parent = ScrollingFrame
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ 
