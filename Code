@@ -9,7 +9,7 @@ local ImageLabel_2 = Instance.new("ImageLabel")
 local paste = Instance.new("TextButton")
 local ImageLabel_3 = Instance.new("ImageLabel")
 local save = Instance.new("TextButton")
-local ImageLabel_4 = Instance.new("ImageLabel") 
+local ImageLabel_4 = Instance.new("ImageLabel")
 local loa = Instance.new("TextButton")
 local ImageLabel_5 = Instance.new("ImageLabel")
 local chat = Instance.new("TextButton")
@@ -209,7 +209,7 @@ uis.InputBegan:Connect(function(inpu)
 		txt = nil
 		Frame.Visible = false
 		ScrollingFrame.Visible = false
-	else
+	elseif inpu.UserInputType == Enum.UserInputType.MouseButton2 then
 		tl = GetLabel(pos)
 		if tl then
 			cop.Position = UDim2.new(0, pos.X, 0, pos.Y)
