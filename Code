@@ -247,7 +247,8 @@ cop.TextSize = 14.000
 cop.TextXAlignment = Enum.TextXAlignment.Left
 cop.Visible = false
 cop.MouseButton1Click:Connect(function()
-	setclipboard(tl.Text)
+	local text = string.gsub(tl.Text, '^%s+', '')
+	setclipboard(text)
 	t = false
 end)
 
@@ -299,7 +300,7 @@ copy.TextSize = 14.000
 copy.TextXAlignment = Enum.TextXAlignment.Left
 copy.MouseButton1Click:Connect(function()
 	if (#selectedText[2] > 1) then
-		clip = selectedText[2]
+		clip = FixText2(selectedText[2])
 		setclipboard(clip)
 	end
 end)
@@ -524,4 +525,4 @@ TextButton.TextWrapped = true
 
 UIListLayout.Parent = ScrollingFrame
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
- 
+
