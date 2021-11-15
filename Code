@@ -110,6 +110,8 @@ function Chat(message)
 	bar:ReleaseFocus()
 end
 
+local webs = _G.WebsiteLoads
+
 local tl = nil
 
 local clip = nil
@@ -165,6 +167,25 @@ function Load()
 		sav.TextButton.MouseButton1Click:Connect(function()
 			Delete(v)
 		end)
+	end
+	for _, w in pairs(webs) do
+		local web = nil
+		local yes, re = pcall(function()
+			web = game:HttpGet(w,true)
+		end)
+		if yes then
+			local sav = del:Clone()
+			sav.Name = 'nah'
+			sav.Parent = ScrollingFrame
+			sav.Visible = true
+			sav.Text = FixText(web)
+			sav.TextButton:Destroy()
+			sav.MouseButton1Click:Connect(function()
+				textBox.Text = selectedText[1] .. web .. selectedText[3]
+			end)
+		else
+			Error(re)
+		end
 	end
 end
 
