@@ -6,7 +6,7 @@ local cut = Instance.new("TextButton")
 local ImageLabel = Instance.new("ImageLabel")
 local copy = Instance.new("TextButton")
 local ImageLabel_2 = Instance.new("ImageLabel")
-local paste = Instance.new("TextButton") 
+local paste = Instance.new("TextButton")
 local ImageLabel_3 = Instance.new("ImageLabel")
 local save = Instance.new("TextButton")
 local ImageLabel_4 = Instance.new("ImageLabel")
@@ -110,7 +110,7 @@ function Chat(message)
 	bar:ReleaseFocus()
 end
 
-local webs = http:JSONEncode(_G.WebsiteLoads or {})
+local webs = http:JSONDecode(_G.WebsiteLoads or {})
 
 local tl = nil
 
