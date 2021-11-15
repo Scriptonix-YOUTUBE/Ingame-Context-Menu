@@ -150,45 +150,47 @@ local function FixText(v)
 end
 
 function Load()
-	for _, v in pairs(ScrollingFrame:GetChildren()) do
-		if v.Name == 'nah' then
-			v:Destroy()
+	spawn(function()
+		for _, v in pairs(ScrollingFrame:GetChildren()) do
+			if v.Name == 'nah' then
+				v:Destroy()
+			end
 		end
-	end
-	for _, v in pairs(file) do
-		local sav = del:Clone()
-		sav.Name = 'nah'
-		sav.Parent = ScrollingFrame
-		sav.Visible = true
-		sav.Text = FixText(v)
-		sav.MouseButton1Click:Connect(function()
-			textBox.Text = selectedText[1] .. v .. selectedText[3]
-		end)
-		sav.TextButton.MouseButton1Click:Connect(function()
-			Delete(v)
-		end)
-	end
-	for _, w in pairs(webs) do
-		print(w)
-		local web = nil
-		local yes, re = pcall(function()
-			web = game:HttpGet(w,true)
-			print(web)
-		end)
-		if yes then
+		for _, v in pairs(file) do
 			local sav = del:Clone()
 			sav.Name = 'nah'
 			sav.Parent = ScrollingFrame
 			sav.Visible = true
-			sav.Text = FixText(web)
-			sav.TextButton:Destroy()
+			sav.Text = FixText(v)
 			sav.MouseButton1Click:Connect(function()
-				textBox.Text = selectedText[1] .. web .. selectedText[3]
+				textBox.Text = selectedText[1] .. v .. selectedText[3]
 			end)
-		else
-			Error(re)
+			sav.TextButton.MouseButton1Click:Connect(function()
+				Delete(v)
+			end)
 		end
-	end
+		for _, w in pairs(webs) do
+			local web = nil
+			local yes, re = pcall(function()
+				web = http:JSONDecode(game:HttpGet(w,true))
+			end)
+			if yes then
+				for _, v in pairs(web) do
+					local sav = del:Clone()
+					sav.Name = 'nah'
+					sav.Parent = ScrollingFrame
+					sav.Visible = true
+					sav.Text = FixText(v)
+					sav.TextButton:Destroy()
+					sav.MouseButton1Click:Connect(function()
+						textBox.Text = selectedText[1] .. v .. selectedText[3]
+					end)
+				end
+			else
+				Error(re)
+			end
+		end
+	end)
 end
 
 function GetLabel(p)
