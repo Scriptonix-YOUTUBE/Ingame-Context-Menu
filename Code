@@ -247,8 +247,8 @@ cop.TextSize = 14.000
 cop.TextXAlignment = Enum.TextXAlignment.Left
 cop.Visible = false
 cop.MouseButton1Click:Connect(function()
-	local text = string.gsub(tl.Text, '^%s+', '')
-	setclipboard(text)
+	clip = string.gsub(tl.Text, '^%s+', '')
+	setclipboard(clip)
 	t = false
 end)
 
@@ -299,10 +299,8 @@ copy.TextColor3 = Color3.fromRGB(0, 0, 0)
 copy.TextSize = 14.000
 copy.TextXAlignment = Enum.TextXAlignment.Left
 copy.MouseButton1Click:Connect(function()
-	if (#selectedText[2] > 1) then
-		clip = FixText2(selectedText[2])
-		setclipboard(clip)
-	end
+	clip = FixText2(selectedText[2])
+	setclipboard(clip)
 end)
 
 ImageLabel_2.Parent = copy
