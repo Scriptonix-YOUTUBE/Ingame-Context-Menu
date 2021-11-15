@@ -117,7 +117,7 @@ local tl = nil
 local clip = nil
 
 local selectedText = nil
-
+ 
 local textBox = nil
 
 local txt = nil
