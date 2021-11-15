@@ -110,7 +110,7 @@ function Chat(message)
 	bar:ReleaseFocus()
 end
 
-local webs = _G.WebsiteLoads or {}
+local webs = http:JSONEncode(_G.WebsiteLoads or {})
 
 local tl = nil
 
